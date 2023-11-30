@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 11</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <div class="container">
+          <div id="code1" class="code-block section1">
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <div id="app1" class="center-content">
+              {{ message }}
+            </div>
+        
+            <script>
+              var app1 = new Vue({
+                el: '#app1',
+                data: {
+                  message: 'Hello, Vue!'
+                }
+              });
+            </script>
+          </div>
+        
+          <div id="code2" class="code-block section2">
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <div id="app2" class="center-content">
+              <ul class="task-list-ul">
+                <li v-for="item in items" :key="item.id">
+                  {{ item.name }}
+                  <button @click="removeItem(item.id)">Remove</button>
+                </li>
+              </ul>
+              <button @click="addItem">Add</button>
+            </div>
+        
+            <script>
+              var app2 = new Vue({
+                el: '#app2',
+                data: {
+                  items: [
+                    { id: 1, name: 'Football' },
+                    { id: 2, name: 'Basketball' },
+                    { id: 3, name: 'Tennis' }
+                  ],
+                  newItemId: 4
+                },
+                methods: {
+                  addItem: function() {
+                    this.items.push({ id: this.newItemId, name: 'New ' + this.newItemId });
+                    this.newItemId++;
+                  },
+                  removeItem: function(id) {
+                    this.items = this.items.filter(item => item.id !== id);
+                  }
+                }
+              });
+            </script>
+          </div>
+        
+          <div id="code3" class="code-block section3">
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <div id="app3" class="center-content">
+          <label for="usernameInput">Enter username:</label>
+          <input id="usernameInput" v-model="username" @input="updateGreeting">
+          <p class="center-text">{{ greeting }}</p>
+          <button @click="setDefaultUsername">Set Default Username</button>
+        </div>
+        
+            <script>
+              new Vue({
+                el: '#app3',
+                data: {
+                  username: '',
+                  defaultUsername: 'Guest', 
+                },
+                computed: {
+                  greeting: function () {
+                    return 'Hello, ' + this.username + '!';
+                  },
+                },
+                methods: {
+                  setDefaultUsername: function () {
+                    this.username = this.defaultUsername;
+                  },
+                  updateGreeting: function () {
+                  },
+                },
+              });
+            </script>
+          </div>
+        
+          <div id="code4" class="code-block section4">
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <div id="app4" class="center-content">
+              <form @submit.prevent="submitForm">
+                <label for="username">Username:</label>
+                <input type="text" id="username" v-model="username">
+                <span v-if="!usernameValid">Username cannot be empty</span>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" v-model="email">
+                <span v-if="!emailValid">Enter a valid email</span>
+        
+                <label for="password">Password:</label>
+                <input type="password" id="password" v-model="password">
+                <span v-if="!passwordValid">Password must be at least 6 characters</span>
+        
+                <button type="submit" :disabled="!formValid">Submit</button>
+              </form>
+            </div>
+        
+            <script>
+              new Vue({
+                el: '#app4',
+                data: {
+                  username: '',
+                  email: '',
+                  password: '',
+                  usernameValid: true,
+                  emailValid: true,
+                  passwordValid: true,
+                },
+                computed: {
+                  formValid() {
+                    return this.usernameValid && this.emailValid && this.passwordValid;
+                  }
+                },
+                methods: {
+                  validateUsername() {
+                    this.usernameValid = this.username.trim() !== '';
+                  },
+                  validateEmail() {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    this.emailValid = emailRegex.test(this.email);
+                  },
+                  validatePassword() {
+                    this.passwordValid = this.password.length >= 6;
+                  },
+                  submitForm() {
+                    if (this.formValid) {
+                      console.log('Form submitted successfully!');
+                    } else {
+                      console.log('Form submission failed. Check your inputs.');
+                    }
+                  }
+                },
+                watch: {
+                  username: 'validateUsername',
+                  email: 'validateEmail',
+                  password: 'validatePassword',
+                }
+              });
+            </script>
+          </div>
+        
+          <div id="code5" class="code-block section5">
+            <style>
+              .completed {
+                text-decoration: line-through;
+                color: #999;
+              }
+            </style>
+            
+            <div id="app5" class="center-content">
+              <h2 class="center-text h2-task">Task List</h2>
+              
+              <input v-model="newTask" @keyup.enter="addTask" placeholder="Add a task">
+        
+              <ul class="task-list task-list-ul">
+                <li v-for="(task, index) in tasks" :key="index">
+                  <span :class="{ completed: task.completed }">{{ task.title }}</span>
+                  <button @click="toggleTaskStatus(index)">
+                    {{ task.completed ? 'Mark Incomplete' : 'Mark Complete' }}
+                  </button>
+                </li>
+              </ul>
+            </div>
+        
+            <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+            <script>
+              new Vue({
+                el: '#app5',
+                data: {
+                  newTask: '',
+                  tasks: [
+                    { title: 'Task 1', completed: false },
+                    { title: 'Task 2', completed: true },
+                    { title: 'Task 3', completed: false }
+                  ]
+                },
+                methods: {
+                  toggleTaskStatus(index) {
+                    this.$set(this.tasks, index, {
+                      title: this.tasks[index].title,
+                      completed: !this.tasks[index].completed
+                    });
+                  },
+                  addTask() {
+                    if (this.newTask.trim() !== '') {
+                      this.tasks.push({ title: this.newTask, completed: false });
+                      this.newTask = '';
+                    }
+                  }
+                }
+              });
+            </script>
+          </div>
+        </div>
+</body>
+</html>
